@@ -1,8 +1,7 @@
-FROM node:18.17.0-alpine3.17
+FROM node:alpine3.17
 
 WORKDIR /frontend
-COPY package.json /frontend
+COPY . /frontend
 
 RUN npm install
-
-CMD ["npm", "run", "dev"]
+RUN npm run build

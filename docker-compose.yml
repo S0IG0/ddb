@@ -15,9 +15,9 @@ services:
       - ./backend/backend/:/backend
       - staticfiles:/backend/staticfiles
     command: >
-      sh -c
-      "python manage.py collectstatic --no-input &&
-      python manage.py makemigrations &&
+      sh -c 
+      "python manage.py collectstatic --no-input && 
+      python manage.py makemigrations && 
       python manage.py migrate &&
       python manage.py create_superuser &&
       gunicorn --bind 0.0.0.0:8000 backend.wsgi:application"
@@ -36,16 +36,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ./frontend/src:/frontend/src
-      - ./frontend/public:/frontend/public
-      - ./frontend/index.html:/frontend/index.html
-      - ./frontend/.eslintrc.cjs:/frontend/.eslintrc.cjs
-      - ./frontend/package.json:/frontend/package.json
-      - ./frontend/tsconfig.json:/frontend/tsconfig.json
-      - ./frontend/tsconfig.node.json:/frontend/tsconfig.node.json
-      - ./frontend/vite.config.ts:/frontend/vite.config.ts
-    ports:
-      - "5137:5137"
+      - ./frontend:/frontend
+      - dist:/frontend/dist/
     depends_on:
       - backend
 
