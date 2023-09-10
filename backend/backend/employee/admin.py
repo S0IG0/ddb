@@ -7,7 +7,6 @@ from employee.models import (
     Position
 )
 
-# Register your models here.
 models = [
     Employee,
     Departament,
