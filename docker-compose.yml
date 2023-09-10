@@ -1,0 +1,66 @@
+version: 3.2.47
+
+services:
+
+  backend:
+    env_file:
+      - .env
+    container_name: Django
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/backend/:/backend
+      - staticfiles:/backend/staticfiles
+    command: >
+      sh -c
+      "python manage.py collectstatic --no-input &&
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py create_superuser &&
+      gunicorn --bind 0.0.0.0:8000 backend.wsgi:application"
+    depends_on:
+      - database
+
+  database:
+    env_file:
+      - .env
+    container_name: Postgresql
+    image: postgres:14-alpine3.17
+
+  frontend:
+    container_name: React
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/src:/frontend/src
+      - ./frontend/public:/frontend/public
+      - ./frontend/index.html:/frontend/index.html
+      - ./frontend/.eslintrc.cjs:/frontend/.eslintrc.cjs
+      - ./frontend/package.json:/frontend/package.json
+      - ./frontend/tsconfig.json:/frontend/tsconfig.json
+      - ./frontend/tsconfig.node.json:/frontend/tsconfig.node.json
+      - ./frontend/vite.config.ts:/frontend/vite.config.ts
+    ports:
+      - "5137:5137"
+    depends_on:
+      - backend
+
+  nginx:
+    container_name: Nginx
+    image: nginx:1.21.0-alpine
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/etc/nginx/logs
+      - staticfiles:/backend/staticfiles/
+      - dist:/frontend/dist/
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+volumes:
+  staticfiles:
+  dist:
