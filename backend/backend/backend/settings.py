@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "management",
-    "upload",
+    "employee",
 ]
 
 MIDDLEWARE = [
@@ -97,6 +97,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DJANGO_SUPERUSER_USERNAME = environ.get("DJANGO_SUPERUSER_USERNAME")
 DJANGO_SUPERUSER_EMAIL = environ.get("DJANGO_SUPERUSER_EMAIL")
 DJANGO_SUPERUSER_PASSWORD = environ.get("DJANGO_SUPERUSER_PASSWORD")
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
