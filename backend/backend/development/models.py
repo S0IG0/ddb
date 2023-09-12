@@ -43,13 +43,13 @@ class Documentation(models.Model):
     )
     state: State = models.ForeignKey(
         State,
-        related_name='developments',
+        related_name='documentations',
         null=False,
         on_delete=models.CASCADE,
     )
     employees: list[Employee] = models.ManyToManyField(
         Employee,
-        related_name='developments',
+        related_name='documentations',
     )
     create_time = models.DateTimeField(default=timezone.now)
     last_change = models.DateTimeField(default=timezone.now)

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
 
+from employee.signals import DefaultPosition
 from request.models import (
     State,
     PriceList,
@@ -23,7 +24,9 @@ class RequestAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['manager'].queryset = self.fields['manager'].queryset.filter(position__name='Менеджер')
+        self.fields['manager'].queryset = self.fields['manager'].queryset.filter(
+            position__name=DefaultPosition.manager,
+        )
 
 
 class RequestAdmin(admin.ModelAdmin):

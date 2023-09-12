@@ -1,18 +1,20 @@
-import {JSX} from "react";
-import App from "../../App.tsx";
-import Upload from "../pages/Upload.tsx";
-
+import {FC} from "react";
+import Home from "../pages/Home.tsx";
+import Login from "../pages/Login.tsx";
+import Register from "../pages/Register.tsx";
 export interface IRoute {
     path: string,
     name: string
-    component: () => JSX.Element
+    component: FC
 }
 
 export enum RoutesNames {
-    UPLOAD = 'upload',
-    HOME = 'home',
+    Home = 'home',
+    Login = 'login',
+    Register = 'register',
 }
 
 export const routers: Map<string, IRoute> = new Map<string, IRoute>()
-    .set(RoutesNames.HOME, {path: '/', name: RoutesNames.HOME, component: App})
-    .set(RoutesNames.UPLOAD, {path: '/upload', name: RoutesNames.UPLOAD, component: Upload})
+    .set(RoutesNames.Home, {path: '/', name: RoutesNames.Home, component: Home})
+    .set(RoutesNames.Login, {path: '/login', name: RoutesNames.Login, component: Login})
+    .set(RoutesNames.Register, {path: '/register', name: RoutesNames.Register, component: Register})

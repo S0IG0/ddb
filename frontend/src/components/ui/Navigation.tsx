@@ -1,26 +1,28 @@
 import {routers} from "../routers/Router.ts";
-import {Link, Route, Routes} from "react-router-dom";
-import NotFoundPage from "../pages/NotFoundPage.tsx";
+import {NavLink} from "react-router-dom";
+import {FC} from "react";
 
-function Navigation() {
+interface isActive {
+    isActive: boolean,
+}
+
+const Navigation: FC = () => {
+    const setActive = ({isActive}: isActive) =>
+        isActive ?
+            "link link-underline-primary link-offset-3" :
+            "link-underline link-underline-opacity-0"
     return (
         <>
-            <ul className="nav">
+            <ul className="nav border-bottom p-2">
                 {Array.from(routers.values()).map(route =>
-                    <li className="nav-item" key={route.path}>
-                        <Link
-                            className="nav-link"
+                    <li className="nav-item m-2" key={route.path}>
+                        <NavLink
+                            className={setActive}
                             to={route.path}
-                        >{route.name}</Link>
+                        >{route.name}</NavLink>
                     </li>
                 )}
             </ul>
-            <Routes>
-                {Array.from(routers.values()).map(route =>
-                    <Route path={route.path} element={<route.component/>} key={route.name}></Route>
-                )}
-                <Route path={"*"} element={<NotFoundPage/>}></Route>
-            </Routes>
         </>
     )
 }
