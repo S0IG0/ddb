@@ -2,6 +2,9 @@ import {FC, useContext, useState} from "react";
 import {IUser} from "../../models";
 import {Context, PStore} from "../../main.tsx";
 import {observer} from "mobx-react-lite";
+import CustomButton from "../ui/CustomButton.tsx";
+import {routers, RoutesNames} from "../routers/Router.ts";
+import {useNavigate} from "react-router-dom";
 
 const Login: FC = () => {
     const [user, setUser] = useState<IUser>({
@@ -9,12 +12,14 @@ const Login: FC = () => {
         password: "",
     });
     const {store} = useContext<PStore>(Context);
+    const path = routers.get(RoutesNames.PersonalAccount)?.path;
+    const navigate = useNavigate();
     return (
         <>
             <form className="p-4 m-auto" style={{maxWidth: 500}}>
                 <div
-                    hidden={store.errors.length === 0}>
-                    {store.errors.map(error =>
+                    hidden={store.errors.login.length === 0}>
+                    {store.errors.login.map(error =>
                         <div
                             className="alert alert-danger"
                             role="alert"
@@ -50,12 +55,16 @@ const Login: FC = () => {
                         }
                     />
                 </div>
-                <div
-                    className="btn btn-primary ps-3 pe-3"
-                    onClick={() => store.login(user)}
+                <CustomButton
+                    onClick={() =>
+                        store.login(user)
+                            .then(() => {
+                                path && navigate(path);
+                            })
+                }
                 >
                     login
-                </div>
+                </CustomButton>
             </form>
         </>
     );

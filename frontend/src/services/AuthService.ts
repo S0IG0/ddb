@@ -1,5 +1,5 @@
-import $api from "../http";
-import {AxiosResponse} from "axios";
+import $api, {API_URL} from "../http";
+import axios, {AxiosResponse} from "axios";
 import {AuthResponse, RegisterResponse} from "../models/response/AuthResponse.ts";
 import {IRegisterCustomer, IUser} from "../models";
 
@@ -9,6 +9,6 @@ export default class AuthService {
     }
 
     static async register(customer: IRegisterCustomer): Promise<AxiosResponse<RegisterResponse>> {
-        return $api.post<RegisterResponse>("/customer/register/", customer);
+        return axios.post(`${API_URL}/customer/register/`, customer, {withCredentials: true});
     }
 }

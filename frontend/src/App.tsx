@@ -6,6 +6,7 @@ import NotFoundPage from "./components/pages/NotFoundPage.tsx";
 import Footer from "./components/ui/Footer.tsx";
 import TokenService from "./services/TokenService.ts";
 import {Context, PStore} from "./main.tsx";
+import {observer} from "mobx-react-lite";
 
 const App = () => {
     const {store} = useContext<PStore>(Context);
@@ -26,7 +27,16 @@ const App = () => {
                         </header>
                         <div style={{minHeight: "85vh"}}>
                             <Routes>
-                                {Array.from(routers.values()).map(route =>
+                                {Array.from(routers.values()).filter((route) => {
+                                    if (store.isLoading) {
+                                        return route;
+                                    }
+                                    if (store.isAuth) {
+                                        return route.alwaysVisible || route.authVisible === store.isAuth;
+                                    } else {
+                                        return route.alwaysVisible || route.authVisible === false;
+                                    }
+                                }).map(route =>
                                     <Route
                                         path={route.path}
                                         element={<route.component/>}
@@ -44,4 +54,4 @@ const App = () => {
     );
 }
 
-export default App;
+export default observer(App);

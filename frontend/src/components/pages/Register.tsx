@@ -2,6 +2,9 @@ import {FC, useContext, useState} from "react";
 import {IRegisterCustomer} from "../../models";
 import {Context, PStore} from "../../main.tsx";
 import {observer} from "mobx-react-lite";
+import CustomButton from "../ui/CustomButton.tsx";
+import {routers, RoutesNames} from "../routers/Router.ts";
+import {useNavigate} from "react-router-dom";
 
 const Register: FC = () => {
     const [customer, setCustomer] = useState<IRegisterCustomer>(
@@ -16,13 +19,16 @@ const Register: FC = () => {
             bank_account: '',
         },
     )
+    const [password, setPassword] = useState('');
     const {store} = useContext<PStore>(Context);
+    const path = routers.get(RoutesNames.PersonalAccount)?.path;
+    const navigate = useNavigate();
     return (
         <>
             <form className="p-4 m-auto" style={{maxWidth: 500}}>
                 <div
-                    hidden={store.errors.length === 0}>
-                    {store.errors.map(error =>
+                    hidden={store.errors.register.length === 0}>
+                    {store.errors.register.map(error =>
                         <div
                             className="alert alert-danger"
                             role="alert"
@@ -116,19 +122,27 @@ const Register: FC = () => {
                         type="password"
                         className="form-control"
                         placeholder="password"
-                        value={customer.user.password}
+                        value={password}
                         onChange={
                             event =>
-                                setCustomer({...customer, user: {...customer.user, password: event.target.value}})
+                                setPassword(event.target.value)
                         }
                     />
                 </div>
-                <div
-                    className="btn btn-primary ps-3 pe-3"
-                    onClick={() => store.register(customer)}
+                <CustomButton
+                    onClick={() => {
+                        if (password !== customer.user.password) {
+                            store.errors.register.push('Passwords dont match')
+                        } else {
+                            store.register(customer)
+                                .then(() => {
+                                    path && navigate(path);
+                                })
+                        }
+                    }}
                 >
                     register
-                </div>
+                </CustomButton>
             </form>
         </>
     );
