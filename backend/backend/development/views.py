@@ -11,6 +11,7 @@ from development.serializers import DevelopmentSerializer, EmployeeDevelopmentSe
 from employee.models import Employee
 from employee.serializers import DocumentationSmallSerializer
 from request.models import State
+from request.signals import DefaultState
 
 
 class DevelopmentListAPIView(ListAPIView):
@@ -169,7 +170,7 @@ class DocumentationCreateAPIView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        state = State.objects.all().order_by('pk')[0]
+        state = State.objects.get(name=DefaultState.create)
         employee = self.request.user.employee
 
         validated_data = serializer.validated_data
