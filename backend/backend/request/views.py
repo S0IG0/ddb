@@ -12,6 +12,7 @@ from employee.signals import DefaultPosition
 from request.models import PriceList, Request, State
 from request.serializers import PriceListSerializer, RequestSerializer, RequestCreateSerializer, StateSerializer, \
     RequestUpdateStateSerializer
+from request.signals import DefaultState
 
 
 class PriceListListAPIView(ListAPIView):
@@ -52,7 +53,7 @@ class RequestCreateAPIView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        state = State.objects.all().order_by('pk')[0]
+        state = State.objects.get(name=DefaultState.create)
         random_manager = choice(Employee.objects.filter(position__name=DefaultPosition.manager))
         customer = self.request.user.customer
 

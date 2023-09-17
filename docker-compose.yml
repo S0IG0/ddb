@@ -1,7 +1,6 @@
 version: 3.2.47
 
 services:
-
   backend:
     env_file:
       - .env

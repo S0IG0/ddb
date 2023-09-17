@@ -14,7 +14,10 @@ interface Props {
 const LineLevelPosition: FC<Props> = ({deleteFunction, isLoadingDelete, item}) => {
     const {store} = useContext<PStore>(Context);
     const [isEdit, setIsEdit] = useState(false);
-    const [newItem, setNewItem] = useState<CreateLevelPosition>({...item, coefficient_salary: Number(item.coefficient_salary)});
+    const [newItem, setNewItem] = useState<CreateLevelPosition>({
+        ...item,
+        coefficient_salary: Number(item.coefficient_salary)
+    });
     const [isLoading, setIsLoading] = useState(false);
 
     const editLevelPosition = (id: number) => {
@@ -31,12 +34,15 @@ const LineLevelPosition: FC<Props> = ({deleteFunction, isLoadingDelete, item}) =
         <>
             <th scope="row">{item.id}</th>
             <td>
-                <input
-                    disabled={!isEdit}
-                    className="form-control text-nowrap"
-                    value={newItem.name}
-                    onChange={event => setNewItem({...newItem, name: event.target.value})}
-                />
+                {isEdit ? <input
+                        className="form-control  text-nowrap"
+                        value={newItem.name}
+                        onChange={event => setNewItem({...newItem, name: event.target.value})}
+                    /> :
+                    <div className="form-control bg-body-secondary text-nowrap">
+                        {newItem.name}
+                    </div>
+                }
             </td>
             <td>
                 <input
