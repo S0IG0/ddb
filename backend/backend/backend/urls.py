@@ -15,7 +15,7 @@ from employee.views import GetUserByToken, PositionCreateAPIView, PositionListAP
     DepartamentCreateAPIView, EmployeeCreateAPIView, DepartamentDestroyAPIView, LevelPositionDestroyAPIView, \
     EmployeeDestroyAPIView, PositionDestroyAPIView
 from request.views import PriceListListAPIView, RequestListAPIView, RequestCreateAPIView, StateListAPIView, \
-    StateCreateAPIView, PriceListAPIView, StateDestroyAPIView, PriceListDestroyAPIView
+    StateCreateAPIView, PriceListAPIView, StateDestroyAPIView, PriceListDestroyAPIView, RequestUpdateAPIView
 
 urlpatterns = [
     path("api/admin/", admin.site.urls),
@@ -58,5 +58,8 @@ urlpatterns = [
     path('api/documentation/leave/employee/', LeaveEmployeeToDocumentation.as_view(), name='documentation_leave_employee'),
 
     path('api/documentation/<int:pk>/', DocumentationRetrieveUpdateDestroyAPIView.as_view(), name='documentation_update'),
+
+
+    path('api/request/state/<int:pk>/', RequestUpdateAPIView.as_view(), name='documentation_update'),
 
 ]

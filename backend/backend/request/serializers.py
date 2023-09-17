@@ -32,3 +32,11 @@ class RequestCreateSerializer(ModelSerializer):
     class Meta:
         model = Request
         fields = ['description', 'price_list']
+
+
+class RequestUpdateStateSerializer(ModelSerializer):
+    class Meta:
+        model = Request
+        fields = [
+            'state',
+        ]

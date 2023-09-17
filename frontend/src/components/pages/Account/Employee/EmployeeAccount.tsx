@@ -4,11 +4,13 @@ import {Context, PStore} from "../../../../main.tsx";
 import $api from "../../../../http";
 import Spinner from "../../../ux/Spinner.tsx";
 import {useNavigate} from "react-router-dom";
+import RequestTable from "./tables/RequestTable.tsx";
 
 const EmployeeAccount: FC = () => {
     const {store} = useContext<PStore>(Context);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
     return (
         <>
             <DevelopmentTable
@@ -33,6 +35,8 @@ const EmployeeAccount: FC = () => {
             >
                 <div className="btn btn-primary">view</div>
             </DevelopmentTable>
+
+            <RequestTable/>
         </>
     );
 }

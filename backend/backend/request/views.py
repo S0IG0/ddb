@@ -1,7 +1,8 @@
 from random import choice
 
 from django.utils import timezone
-from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView, \
+    UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
@@ -9,7 +10,8 @@ from development.models import Development
 from employee.models import Employee
 from employee.signals import DefaultPosition
 from request.models import PriceList, Request, State
-from request.serializers import PriceListSerializer, RequestSerializer, RequestCreateSerializer, StateSerializer
+from request.serializers import PriceListSerializer, RequestSerializer, RequestCreateSerializer, StateSerializer, \
+    RequestUpdateStateSerializer
 
 
 class PriceListListAPIView(ListAPIView):
@@ -31,7 +33,16 @@ class RequestListAPIView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = Request.objects.filter(customer=user.customer)
+        queryset = []
+        try:
+            queryset = Request.objects.filter(customer=user.customer)
+        except Exception as exception:
+            exception.__str__()
+
+        try:
+            queryset = Request.objects.filter(manager=user.employee)
+        except Exception as exception:
+            exception.__str__()
 
         return queryset
 
@@ -89,3 +100,21 @@ class PriceListDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = PriceList.objects.all()
     serializer_class = PriceListSerializer
     permission_classes = (IsAuthenticated, IsAdminUser,)
+
+
+class RequestUpdateAPIView(UpdateAPIView):
+    queryset = Request.objects.all()
+    serializer_class = RequestUpdateStateSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(RequestSerializer(instance).data)

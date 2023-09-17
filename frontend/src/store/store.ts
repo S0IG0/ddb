@@ -12,6 +12,7 @@ import {ResponsePriceList} from "../components/pages/Account/Admin/shows/ShowPri
 import {ResponseState} from "../components/pages/Account/Admin/shows/ShowState.tsx";
 import {ResponseDevelopment} from "../components/pages/Account/Employee/tables/DevelopmentTable.tsx";
 import {ResponseDocumentation} from "../components/pages/Account/Employee/DevelopmentPage.tsx";
+import {RequestResponse} from "../models/response/RequestResponse.ts";
 
 interface Errors {
     login: any[],
@@ -55,6 +56,8 @@ export default class Store {
     youDocumentations: ResponseDocumentation[] = [];
     notYouDocumentations: ResponseDocumentation[] = [];
 
+    requests: RequestResponse[] = [];
+
     constructor() {
         makeAutoObservable(this);
     }
@@ -80,6 +83,14 @@ export default class Store {
         if (index !== -1) {
             return  array[index];
         }
+    }
+
+    setRequests(requests: RequestResponse[]){
+        this.requests = requests;
+    }
+
+    addRequests(request: RequestResponse) {
+        this.requests.push(request);
     }
 
     setYouDocumentations(documentations: ResponseDocumentation[]){
