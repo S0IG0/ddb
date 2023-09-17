@@ -28,29 +28,17 @@ services:
     container_name: Postgresql
     image: postgres:14-alpine3.17
 
-  frontend:
-    container_name: React
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/frontend
-      - dist:/frontend/dist/
-    depends_on:
-      - backend
-
   nginx:
     container_name: Nginx
-    image: nginx:1.21.0-alpine
+    build:
+      dockerfile: ./nginx/Dockerfile
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/logs:/etc/nginx/logs
       - staticfiles:/backend/staticfiles/
-      - dist:/frontend/dist/
     ports:
       - "80:80"
     depends_on:
       - backend
 volumes:
   staticfiles:
-  dist:

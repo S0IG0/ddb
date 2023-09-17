@@ -1,5 +1,4 @@
 import {FC} from "react";
-import TokenService from "../../services/TokenService.ts";
 
 const Home: FC = () => {
     return (
