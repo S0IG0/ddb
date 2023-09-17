@@ -6,10 +6,20 @@ import {API_URL} from "../http";
 import TokenService from "../services/TokenService.ts";
 import {ResponsePosition} from "../components/pages/Account/Admin/forms/CreatePositionFrom.tsx";
 import {ResponseEmployee} from "../components/pages/Account/Admin/shows/ShowEmployee.tsx";
+import {ResponseLevelPosition} from "../components/pages/Account/Admin/shows/ShowLevelPosition.tsx";
+import {ResponseDepartment} from "../components/pages/Account/Admin/shows/ShowDepartment.tsx";
+import {ResponsePriceList} from "../components/pages/Account/Admin/shows/ShowPriceList.tsx";
+import {ResponseState} from "../components/pages/Account/Admin/shows/ShowState.tsx";
+import {ResponseDevelopment} from "../components/pages/Account/Employee/tables/DevelopmentTable.tsx";
+import {ResponseDocumentation} from "../components/pages/Account/Employee/DevelopmentPage.tsx";
 
 interface Errors {
     login: any[],
     register: any[],
+}
+
+interface Entity {
+    id: number,
 }
 
 export function parse_errors(data: Object): any[] {
@@ -39,9 +49,69 @@ export default class Store {
     priceLists: ResponsePriceList[] = [];
     states: ResponseState[] = [];
     employees: ResponseEmployee[] = [];
+    youDevelopments: ResponseDevelopment[] = [];
+    notYouDevelopments: ResponseDevelopment[] = [];
+
+    youDocumentations: ResponseDocumentation[] = [];
+    notYouDocumentations: ResponseDocumentation[] = [];
 
     constructor() {
         makeAutoObservable(this);
+    }
+
+    removeEntityById(array: Entity[], id: number): void {
+        const indexToRemove = array.findIndex(department => department.id === id);
+
+        if (indexToRemove !== -1) {
+            array.splice(indexToRemove, 1);
+        }
+    }
+
+    setEntityById(array: Entity[], id: number, entity: Entity): void {
+        const index = array.findIndex(department => department.id === id);
+
+        if (index !== -1) {
+            array[index] = entity;
+        }
+    }
+
+    getEntityById(array: Entity[], id: number) {
+        const index = array.findIndex(department => department.id === id);
+        if (index !== -1) {
+            return  array[index];
+        }
+    }
+
+    setYouDocumentations(documentations: ResponseDocumentation[]){
+        this.youDocumentations = documentations;
+    }
+
+    addYouDocumentation(documentation: ResponseDocumentation) {
+        this.youDocumentations.push(documentation);
+    }
+
+    setNotYouDocumentations(documentations: ResponseDocumentation[]){
+        this.notYouDocumentations = documentations;
+    }
+
+    addNotYouDocumentation(documentation: ResponseDocumentation) {
+        this.notYouDocumentations.push(documentation);
+    }
+
+    setYouDevelopments(developments: ResponseDevelopment[]){
+        this.youDevelopments = developments;
+    }
+
+    addYouDevelopment(developments: ResponseDevelopment) {
+        this.youDevelopments.push(developments);
+    }
+
+    setNotYouDevelopments(developments: ResponseDevelopment[]){
+        this.notYouDevelopments = developments;
+    }
+
+    addNotYouDevelopment(developments: ResponseDevelopment) {
+        this.notYouDevelopments.push(developments);
     }
 
     setPositions(positions: ResponsePosition[]){
@@ -68,19 +138,19 @@ export default class Store {
         this.states.push(state);
     }
 
-    setPriceLists(priceLists: ResponsePosition[]){
+    setPriceLists(priceLists: ResponsePriceList[]){
         this.priceLists = priceLists;
     }
 
-    addPriceList(priceList: ResponsePosition) {
+    addPriceList(priceList: ResponsePriceList) {
         this.priceLists.push(priceList);
     }
 
-    setDepartments(departments: ResponsePosition[]){
+    setDepartments(departments: ResponseDepartment[]){
         this.departments = departments;
     }
 
-    addDepartment(department: ResponsePosition) {
+    addDepartment(department: ResponseDepartment) {
         this.departments.push(department);
     }
 

@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path
-from rest_framework.routers import SimpleRouter
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -8,12 +7,15 @@ from rest_framework_simplejwt.views import (
 )
 
 from customer.views import CustomerRegisterView
-from employee.views import EmployeeViewSet, GetUserByToken, PositionCreateAPIView, PositionListAPIView, \
-    DepartamentListAPIView, LevelPositionListAPIView, EmployeeListAPIView
-from request.views import PriceListListAPIView, RequestListAPIView, RequestCreateAPIView, StateListAPIView
-
-router = SimpleRouter()
-router.register(r'api/register/employee', EmployeeViewSet)
+from development.views import DevelopmentListAPIView, AttachEmployeeToDevelopment, LeaveEmployeeToDevelopment, \
+    DevelopmentRetrieveUpdateDestroyAPIView, LeaveEmployeeToDocumentation, AttachEmployeeToDocumentation, \
+    DocumentationRetrieveUpdateDestroyAPIView, DocumentationCreateAPIView
+from employee.views import GetUserByToken, PositionCreateAPIView, PositionListAPIView, \
+    DepartamentListAPIView, LevelPositionListAPIView, EmployeeListAPIView, LevelPositionCreateAPIView, \
+    DepartamentCreateAPIView, EmployeeCreateAPIView, DepartamentDestroyAPIView, LevelPositionDestroyAPIView, \
+    EmployeeDestroyAPIView, PositionDestroyAPIView
+from request.views import PriceListListAPIView, RequestListAPIView, RequestCreateAPIView, StateListAPIView, \
+    StateCreateAPIView, PriceListAPIView, StateDestroyAPIView, PriceListDestroyAPIView
 
 urlpatterns = [
     path("api/admin/", admin.site.urls),
@@ -31,6 +33,30 @@ urlpatterns = [
     path('api/levelPosition/', LevelPositionListAPIView.as_view(), name='level_position'),
     path('api/state/', StateListAPIView.as_view(), name='state_position'),
     path('api/employee/', EmployeeListAPIView.as_view(), name='employee'),
-]
 
-urlpatterns += router.urls
+    path('api/levelPosition/create/', LevelPositionCreateAPIView.as_view(), name='level_position_create'),
+    path('api/department/create/', DepartamentCreateAPIView.as_view(), name='department_create'),
+    path('api/state/create/', StateCreateAPIView.as_view(), name='state_create'),
+    path('api/priceList/create/', PriceListAPIView.as_view(), name='price_list_create'),
+    path('api/employee/create/', EmployeeCreateAPIView.as_view(), name='employee_list_create'),
+    path('api/documentation/create/', DocumentationCreateAPIView.as_view(), name='documentation_create'),
+
+    path('api/state/<int:pk>/', StateDestroyAPIView.as_view(), name='state_destroy'),
+    path('api/priceList/<int:pk>/', PriceListDestroyAPIView.as_view(), name='price_list_destroy'),
+    path('api/department/<int:pk>/', DepartamentDestroyAPIView.as_view(), name='department_destroy'),
+    path('api/levelPosition/<int:pk>/', LevelPositionDestroyAPIView.as_view(), name='level_position_destroy'),
+    path('api/position/<int:pk>/', PositionDestroyAPIView.as_view(), name='position_destroy'),
+    path('api/employee/<int:pk>/', EmployeeDestroyAPIView.as_view(), name='employee_destroy'),
+
+    path('api/development/', DevelopmentListAPIView.as_view(), name='development_list'),
+    path('api/development/attach/employee/', AttachEmployeeToDevelopment.as_view(), name='development_attach_employee'),
+    path('api/development/leave/employee/', LeaveEmployeeToDevelopment.as_view(), name='development_leave_employee'),
+
+    path('api/development/<int:pk>/', DevelopmentRetrieveUpdateDestroyAPIView.as_view(), name='development_retrieve'),
+
+    path('api/documentation/attach/employee/', AttachEmployeeToDocumentation.as_view(), name='documentation_attach_employee'),
+    path('api/documentation/leave/employee/', LeaveEmployeeToDocumentation.as_view(), name='documentation_leave_employee'),
+
+    path('api/documentation/<int:pk>/', DocumentationRetrieveUpdateDestroyAPIView.as_view(), name='documentation_update'),
+
+]

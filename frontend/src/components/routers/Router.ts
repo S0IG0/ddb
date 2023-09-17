@@ -3,6 +3,7 @@ import Home from "../pages/Home.tsx";
 import Login from "../pages/Login.tsx";
 import Register from "../pages/Register.tsx";
 import PersonalAccount from "../pages/PersonalAccount.tsx";
+import DevelopmentPage from "../pages/Account/Employee/DevelopmentPage.tsx";
 export interface IRoute {
     path: string,
     name: string
@@ -16,6 +17,7 @@ export enum RoutesNames {
     Login = 'login',
     Register = 'register',
     PersonalAccount = 'account',
+    Development = 'development',
 }
 
 export const routers: Map<string, IRoute> = new Map<string, IRoute>()
@@ -30,4 +32,7 @@ export const routers: Map<string, IRoute> = new Map<string, IRoute>()
     )
     .set(RoutesNames.PersonalAccount,
         {path: '/account', name: RoutesNames.PersonalAccount, component: PersonalAccount, alwaysVisible: false, authVisible: true}
+    )
+    .set(RoutesNames.Development,
+        {path: '/development/:id', name: RoutesNames.Development, component: DevelopmentPage, alwaysVisible: false, authVisible: false}
     )

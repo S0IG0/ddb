@@ -2,8 +2,8 @@ import {FC, useContext, useEffect, useState} from "react";
 import {observer} from "mobx-react-lite";
 import {Context, PStore} from "../../../../../main.tsx";
 import $api from "../../../../../http";
-import {ResponsePosition} from "../forms/CreatePositionFrom.tsx";
 import Spinner from "../../../../ux/Spinner.tsx";
+import LineDepartment from "./edit/LineDepartmnet.tsx";
 
 export interface ResponseDepartment {
     id: number,
@@ -21,15 +21,28 @@ const ShowDepartment: FC = () => {
             .finally(() => setIsLoading(false));
     }, []);
 
+    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+
+    const deleteDepartment = (id: number) => {
+        setIsLoadingDelete(true)
+        $api.delete(`/department/${id}/`)
+            .then(() => {
+                store.removeEntityById(store.departments, id);
+            })
+            .finally(() => setIsLoadingDelete(false));
+    }
+
     return (
         <>
             <div className="table-responsive ms-4 me-4">
                 <table className="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Address</th>
+                        <th className="text-nowrap" scope="col">Id</th>
+                        <th className="text-nowrap" scope="col">Name</th>
+                        <th className="text-nowrap" scope="col">Address</th>
+                        <th className="text-nowrap" scope="col">delete</th>
+                        <th className="text-nowrap" scope="col">edit</th>
                     </tr>
                     </thead>
 
@@ -38,9 +51,11 @@ const ShowDepartment: FC = () => {
                     {store.departments.map((item) => {
                         return (
                             <tr key={item.id}>
-                                <th scope="row">{item.id}</th>
-                                <td>{item.name}</td>
-                                <td>{item.address}</td>
+                                <LineDepartment
+                                    deleteFunction={deleteDepartment}
+                                    item={item}
+                                    isLoadingDelete={isLoadingDelete}
+                                />
                             </tr>
                         )
                     })}

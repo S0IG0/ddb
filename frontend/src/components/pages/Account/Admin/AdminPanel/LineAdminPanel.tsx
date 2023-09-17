@@ -1,5 +1,4 @@
 import {FC, ReactNode, useState} from "react";
-import CustomButton from "../../../../ui/CustomButton.tsx";
 import {ModalWindow} from "../../../../ui/ModalWindow.tsx";
 
 export interface PropsLineAdminPanel {
@@ -16,10 +15,10 @@ const LineAdminPanel: FC<PropsLineAdminPanel> = ({createFrom, showForm, descript
     return (
         <>
             <tr>
-                <td>{name}</td>
-                <td>{description}</td>
+                <td className="text-nowrap">{name}</td>
+                <td className="text-nowrap">{description}</td>
                 <td>
-                    <div className="btn btn-success" onClick={() => setCreate(true)}>
+                    <div className="btn btn-success text-nowrap" onClick={() => setCreate(true)}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16"
@@ -31,7 +30,7 @@ const LineAdminPanel: FC<PropsLineAdminPanel> = ({createFrom, showForm, descript
                     </div>
                 </td>
                 <td>
-                    <div className="btn btn-primary" onClick={() => setShow(true)}>
+                    <div className="btn btn-primary text-nowrap" onClick={() => setShow(true)}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16"

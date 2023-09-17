@@ -4,6 +4,7 @@ import $api from "../../../../../http";
 import Spinner from "../../../../ux/Spinner.tsx";
 import {observer} from "mobx-react-lite";
 import {Context, PStore} from "../../../../../main.tsx";
+import LinePosition from "./edit/LinePosition.tsx";
 
 const ShowPosition: FC = () => {
     const {store} = useContext<PStore>(Context);
@@ -15,14 +16,27 @@ const ShowPosition: FC = () => {
             .finally(() => setIsLoading(false));
     }, []);
 
+    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+
+    const deletePosition = (id: number) => {
+        setIsLoadingDelete(true);
+        $api.delete(`/position/${id}/`)
+            .then(() => {
+                store.removeEntityById(store.positions, id);
+            })
+            .finally(() => setIsLoadingDelete(false));
+    }
+
     return (
         <>
             <div className="table-responsive ms-4 me-4">
                 <table className="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Name</th>
+                        <th className="text-nowrap" scope="col">Id</th>
+                        <th className="text-nowrap" scope="col">Name</th>
+                        <th className="text-nowrap" scope="col">delete</th>
+                        <th className="text-nowrap" scope="col">edit</th>
                     </tr>
                     </thead>
 
@@ -31,8 +45,8 @@ const ShowPosition: FC = () => {
                     {store.positions.map((position) => {
                         return (
                             <tr key={position.id}>
-                                <th scope="row">{position.id}</th>
-                                <td>{position.name}</td>
+                                <LinePosition deleteFunction={deletePosition} item={position}
+                                              isLoadingDelete={isLoadingDelete}/>
                             </tr>
                         )
                     })}

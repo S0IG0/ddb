@@ -31,6 +31,11 @@ const App = () => {
                                     if (store.isLoading) {
                                         return route;
                                     }
+
+                                    if (route.path.includes(":")) {
+                                        return true;
+                                    }
+
                                     if (store.isAuth) {
                                         return route.alwaysVisible || route.authVisible === store.isAuth;
                                     } else {

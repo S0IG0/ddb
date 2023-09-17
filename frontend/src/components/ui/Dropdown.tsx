@@ -1,4 +1,5 @@
 import {Dispatch, FC, SetStateAction} from 'react';
+import {observer} from "mobx-react-lite";
 
 export interface Item {
     name: string,
@@ -38,4 +39,4 @@ const Dropdown: FC<Props> = ({data, choiceItem, setChoiceItem}) => {
     );
 }
 
-export default Dropdown;
+export default observer(Dropdown);

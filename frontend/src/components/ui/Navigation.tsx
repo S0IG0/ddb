@@ -1,4 +1,4 @@
-import {routers} from "../routers/Router.ts";
+import {routers, RoutesNames} from "../routers/Router.ts";
 import {NavLink} from "react-router-dom";
 import {FC, useContext} from "react";
 import {Context, PStore} from "../../main.tsx";
@@ -18,17 +18,21 @@ const Navigation: FC = () => {
         <>
             <ul className="nav border-bottom p-2">
                 {Array.from(routers.values()).filter((route) => {
-                    if (store.isAuth) {
-                        return route.alwaysVisible || route.authVisible === store.isAuth;
-                    } else {
-                        return route.alwaysVisible || route.authVisible === false;
+                    if (route.name !== RoutesNames.Development) {
+                        if (store.isAuth) {
+                            return route.alwaysVisible || route.authVisible === store.isAuth;
+                        } else {
+                            return route.alwaysVisible || route.authVisible === false;
+                        }
                     }
                 }).map(route =>
                     <li className="nav-item m-2" key={route.path}>
                         <NavLink
                             className={setActive}
                             to={route.path}
-                            onClick={() => {store.clearErrors()}}
+                            onClick={() => {
+                                store.clearErrors()
+                            }}
                         >{route.name}</NavLink>
                     </li>
                 )}

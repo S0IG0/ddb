@@ -1,9 +1,11 @@
 from random import choice
 
-from rest_framework.generics import ListAPIView, CreateAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.utils import timezone
+from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
+from development.models import Development
 from employee.models import Employee
 from employee.signals import DefaultPosition
 from request.models import PriceList, Request, State
@@ -11,13 +13,13 @@ from request.serializers import PriceListSerializer, RequestSerializer, RequestC
 
 
 class PriceListListAPIView(ListAPIView):
-    queryset = PriceList.objects.all()
+    queryset = PriceList.objects.all().order_by('pk')
     serializer_class = PriceListSerializer
     permission_classes = (AllowAny,)
 
 
 class StateListAPIView(ListAPIView):
-    queryset = State.objects.all()
+    queryset = State.objects.all().order_by('pk')
     serializer_class = StateSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -39,14 +41,21 @@ class RequestCreateAPIView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        state = State.objects.all()[0]
+        state = State.objects.all().order_by('pk')[0]
         random_manager = choice(Employee.objects.filter(position__name=DefaultPosition.manager))
         customer = self.request.user.customer
 
-        serializer.save(
+        request_instance = serializer.save(
             state=state,
             manager=random_manager,
             customer=customer
+        )
+
+        Development.objects.create(
+            request=request_instance,
+            state=state,
+            start_time=timezone.now(),
+            last_change=timezone.now(),
         )
 
     def create(self, request, *args, **kwargs):
@@ -56,3 +65,27 @@ class RequestCreateAPIView(CreateAPIView):
         instance = serializer.instance
         serialized_data = RequestSerializer(instance)
         return Response(serialized_data.data)
+
+
+class StateCreateAPIView(CreateAPIView):
+    queryset = State.objects.all()
+    serializer_class = StateSerializer
+    permission_classes = (IsAuthenticated, IsAdminUser,)
+
+
+class PriceListAPIView(CreateAPIView):
+    queryset = PriceList.objects.all()
+    serializer_class = PriceListSerializer
+    permission_classes = (IsAuthenticated, IsAdminUser,)
+
+
+class StateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = State.objects.all()
+    serializer_class = StateSerializer
+    permission_classes = (IsAuthenticated, IsAdminUser,)
+
+
+class PriceListDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = PriceList.objects.all()
+    serializer_class = PriceListSerializer
+    permission_classes = (IsAuthenticated, IsAdminUser,)

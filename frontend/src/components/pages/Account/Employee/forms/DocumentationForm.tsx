@@ -1,37 +1,37 @@
 import {FC, useContext, useState} from "react";
 import CustomButton from "../../../../ui/CustomButton.tsx";
-import Spinner from "../../../../ux/Spinner.tsx";
-import {Context, PStore} from "../../../../../main.tsx";
 import $api from "../../../../../http";
+import Spinner from "../../../../ux/Spinner.tsx";
+import {ResponseDocumentation} from "../DevelopmentPage.tsx";
+import {Context, PStore} from "../../../../../main.tsx";
 import {parse_errors} from "../../../../../store/store.ts";
-import {ResponseState} from "../shows/ShowState.tsx";
 
-export interface CreateState {
-    name: string,
+interface Props {
+    development: number,
 }
 
-
-const CreateStateForm: FC = () => {
+const DocumentationForm: FC<Props> = ({development}) => {
     const {store} = useContext<PStore>(Context);
-    const [state, setState] = useState<CreateState>({
-        name: "",
-    });
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<any[]>([]);
+    const [text, setText] = useState("")
 
-    const createState = () => {
+    const createDocumentation = () => {
         setIsLoading(true);
-        $api.post<ResponseState>("/state/create/", state)
-            .then((response) => {
-                store.addState(response.data);
-                setState({name: ""});
+        $api.post<ResponseDocumentation>("/documentation/create/", {
+            development: development,
+            text: text,
+        })
+            .then(response => {
+                store.addYouDocumentation(response.data);
+                setText("");
                 setErrors([]);
             })
-            .catch((error) => {
+            .catch(error => {
                 setErrors(parse_errors(error.response.data));
             })
-            .finally(() => setIsLoading(false));
-    }
+            .finally(() => setIsLoading(false))
+    };
 
     return (
         <>
@@ -48,17 +48,16 @@ const CreateStateForm: FC = () => {
                         </div>
                     )}
                 </div>
-                <label className="form-label">Name for state</label>
-                <div className="input-group mb-3">
-                    <input
-                        value={state.name}
-                        onChange={event => setState({name: event.target.value})}
-                        className="form-control"
-                        placeholder="create"
-                    />
-                </div>
+                <label className="form-label">You documentation</label>
+                <textarea
+                    className="form-control mb-4"
+                    id="exampleFormControlTextarea1"
+                    rows={10}
+                    value={text}
+                    onChange={event => setText(event.target.value)}
+                />
                 <CustomButton
-                    onClick={() => createState()}
+                    onClick={() => createDocumentation()}
                 >
                     {isLoading ? <Spinner/> : "create"}
                 </CustomButton>
@@ -67,4 +66,4 @@ const CreateStateForm: FC = () => {
     );
 }
 
-export default CreateStateForm;
+export default DocumentationForm;

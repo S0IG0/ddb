@@ -22,6 +22,10 @@ class UserSerializer(ModelSerializer):
         )
 
         extra_kwargs = {
+            'username': {
+                'required': False,
+            },
+
             'first_name': {
                 'required': True,
             },
@@ -35,6 +39,7 @@ class UserSerializer(ModelSerializer):
             },
 
             'password': {
+                'required': False,
                 'write_only': True,
             },
 

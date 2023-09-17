@@ -63,10 +63,10 @@ const AdminPanel: FC = () => {
                 <table className="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="col">name</th>
-                        <th scope="col">description</th>
-                        <th scope="col">create</th>
-                        <th scope="col">show</th>
+                        <th className="text-nowrap" scope="col">name</th>
+                        <th className="text-nowrap" scope="col">description</th>
+                        <th className="text-nowrap" scope="col">create</th>
+                        <th className="text-nowrap" scope="col">show</th>
                     </tr>
                     </thead>
                     <tbody>

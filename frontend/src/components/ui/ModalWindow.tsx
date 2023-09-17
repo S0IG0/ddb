@@ -38,6 +38,9 @@ const ModalContent = styled.div<ModalContentProps>`
   background-color: white;
   border-radius: 15px;
 
+  overflow-y: auto;
+  max-height: 80vh;
+
   ${({$active}) =>
           $active === 'true' &&
           css`

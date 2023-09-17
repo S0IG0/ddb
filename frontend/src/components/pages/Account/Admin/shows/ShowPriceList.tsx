@@ -3,8 +3,9 @@ import {observer} from "mobx-react-lite";
 import {Context, PStore} from "../../../../../main.tsx";
 import $api from "../../../../../http";
 import Spinner from "../../../../ux/Spinner.tsx";
+import LinePriceList from "./edit/LinePriceList.tsx";
 
-export  interface ResponsePriceList {
+export interface ResponsePriceList {
     id: number,
     name: string,
     price: string,
@@ -20,15 +21,28 @@ const ShowPriceList: FC = () => {
             .finally(() => setIsLoading(false));
     }, []);
 
+    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+
+    const deletePriceList = (id: number) => {
+        setIsLoadingDelete(true);
+        $api.delete(`/priceList/${id}/`)
+            .then(() => {
+                store.removeEntityById(store.priceLists, id);
+            })
+            .finally(() => setIsLoadingDelete(false));
+    }
+
     return (
         <>
             <div className="table-responsive ms-4 me-4">
                 <table className="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Price</th>
+                        <th className="text-nowrap" scope="col">Id</th>
+                        <th className="text-nowrap" scope="col">Name</th>
+                        <th className="text-nowrap" scope="col">Price</th>
+                        <th className="text-nowrap" scope="col">delete</th>
+                        <th className="text-nowrap" scope="col">edit</th>
                     </tr>
                     </thead>
 
@@ -37,9 +51,9 @@ const ShowPriceList: FC = () => {
                     {store.priceLists.map((item) => {
                         return (
                             <tr key={item.id}>
-                                <th scope="row">{item.id}</th>
-                                <td>{item.name}</td>
-                                <td>{item.price}</td>
+                                <LinePriceList deleteFunction={deletePriceList} item={item}
+                                               isLoadingDelete={isLoadingDelete}/>
+
                             </tr>
                         )
                     })}

@@ -3,9 +3,10 @@ import {observer} from "mobx-react-lite";
 import {Context, PStore} from "../../../../../main.tsx";
 import $api from "../../../../../http";
 import Spinner from "../../../../ux/Spinner.tsx";
+import LineLevelPosition from "./edit/LineLevelPosition.tsx";
 
-export  interface ResponseLevelPosition {
-    id: boolean,
+export interface ResponseLevelPosition {
+    id: number,
     name: string,
     coefficient_salary: string,
 }
@@ -20,15 +21,28 @@ const ShowLevelPosition: FC = () => {
             .finally(() => setIsLoading(false));
     }, []);
 
+    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+
+    const deleteLevelPosition = (id: number) => {
+        setIsLoadingDelete(true);
+        $api.delete(`/levelPosition/${id}/`)
+            .then(() => {
+                store.removeEntityById(store.levelPositions, id);
+            })
+            .finally(() => setIsLoadingDelete(false));
+    }
+
     return (
         <>
             <div className="table-responsive ms-4 me-4">
                 <table className="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Coefficient salary</th>
+                        <th className="text-nowrap" scope="col">Id</th>
+                        <th className="text-nowrap" scope="col">Name</th>
+                        <th className="text-nowrap" scope="col">Coefficient salary</th>
+                        <th className="text-nowrap" scope="col">delete</th>
+                        <th className="text-nowrap" scope="col">edit</th>
                     </tr>
                     </thead>
 
@@ -37,9 +51,8 @@ const ShowLevelPosition: FC = () => {
                     {store.levelPositions.map((levelPosition) => {
                         return (
                             <tr key={levelPosition.id}>
-                                <th scope="row">{levelPosition.id}</th>
-                                <td>{levelPosition.name}</td>
-                                <td>{levelPosition.coefficient_salary}</td>
+                                <LineLevelPosition deleteFunction={deleteLevelPosition} item={levelPosition}
+                                                   isLoadingDelete={isLoadingDelete}/>
                             </tr>
                         )
                     })}
