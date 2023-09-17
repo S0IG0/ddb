@@ -10,6 +10,10 @@ export default defineConfig({
         },
         host: true,
         strictPort: true,
-        port: 5137
-    }
+        port: 5137,
+        hmr: {
+            overlay: false,
+            clientPort: 5137,
+        }
+    },
 })
