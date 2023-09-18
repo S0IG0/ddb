@@ -4,3 +4,4 @@ from backend.settings.middleware import *
 from backend.settings.apps import *
 from backend.settings.database import *
 from backend.settings.develop import *
+from backend.settings.cache import *
