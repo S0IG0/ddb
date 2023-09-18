@@ -20,12 +20,17 @@ services:
       gunicorn --bind 0.0.0.0:8000 backend.wsgi:application"
     depends_on:
       - database
+      - redis
 
   database:
     env_file:
       - .env
     container_name: Postgresql
     image: postgres:14-alpine3.17
+
+  redis:
+    container_name: Redis
+    image: redis:7.0.5-alpine3.17
 
   nginx:
     container_name: Nginx
