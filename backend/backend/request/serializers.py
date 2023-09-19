@@ -24,6 +24,7 @@ class RequestSerializer(ModelSerializer):
     price_list = PriceListSerializer()
 
     class Meta:
+        ref_name = "RequestRequest"
         model = Request
         fields = '__all__'
 

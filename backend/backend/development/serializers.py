@@ -7,7 +7,9 @@ from request.serializers import StateSerializer
 
 
 class RequestSerializer(ModelSerializer):
+
     class Meta:
+        ref_name = "DevelopmentRequest"
         model = Request
         fields = '__all__'
 

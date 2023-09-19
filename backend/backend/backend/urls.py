@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from backend.yasg import urlpatterns as doc_urls
 from customer.views import CustomerRegisterView
 from development.views import DevelopmentListAPIView, AttachEmployeeToDevelopment, LeaveEmployeeToDevelopment, \
     DevelopmentRetrieveUpdateDestroyAPIView, LeaveEmployeeToDocumentation, AttachEmployeeToDocumentation, \
@@ -61,5 +62,6 @@ urlpatterns = [
 
 
     path('api/request/state/<int:pk>/', RequestUpdateAPIView.as_view(), name='documentation_update'),
-
 ]
+
+urlpatterns += doc_urls
